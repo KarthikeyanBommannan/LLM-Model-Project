@@ -1,6 +1,7 @@
 import os
 import warnings
 warnings.simplefilter("ignore")
+from langchain.llms import OpenAI
 
 directory = r"E:"
 
@@ -16,3 +17,7 @@ except Exception as e:
     print(f"An error occured {e}")
     
 os.environ['OPENAI_API_KEY'] = openapi_key
+
+llm = OpenAI(temperature = 0.6)
+name = llm(input())
+print(name)
