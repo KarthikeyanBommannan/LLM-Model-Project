@@ -9,8 +9,9 @@ from langchain.prompts.chat import (
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import streamlit as st
 import PyPDF2
+import os
 
-load_dotenv()
+os.environ["ANTHROPIC_API_KEY"]
 
 
 class LegalExpert:
