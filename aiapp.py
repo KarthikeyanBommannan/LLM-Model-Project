@@ -1,7 +1,7 @@
 import streamlit as st 
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter,RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings,HuggingFaceInstructEmbeddings
 from  langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
@@ -20,19 +20,28 @@ def get_pdf_text(document):
 
 
 def get_text_chunks(text):
-    text_splitter = CharacterTextSplitter(
-    separator="\n",
+    text_splitter1 = RecursiveCharacterTextSplitter(
+    separators= ["\n\n","\n","."," "],
     chunk_size=1000,
     chunk_overlap=200,
     length_function=len
+        
     )
-    chunks = text_splitter.split_text(text)
-    return chunks
+    #text_splitter = CharacterTextSplitter(
+    #separator="\n",
+    #chunk_size=1000,
+    #chunk_overlap=200,
+    #length_function=len
+    #)
+    #chunks = text_splitter.split_text(text)
+    #return chunks
+    chunks1 = text_splitter1.split_text(text)
+    return chunks1
 
 
 def get_vetorstore(text_chunks):
     embeddings = OpenAIEmbeddings()
-    #embeddings = HuggingFaceInstructEmbeddings(model_name = "hkunlp/instructor-xl"     )
+    #embeddings = HuggingFaceInstructEmbeddings(model_name = "hkunlp/instructor-xl")
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
@@ -80,6 +89,7 @@ def main():
                 
                 # get the text from the PDF
                 text_chunks = get_text_chunks(raw_text)
+            
         
                 # create vector store 
                 vectorstore = get_vetorstore(text_chunks)  
